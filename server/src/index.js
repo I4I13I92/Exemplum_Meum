@@ -20,13 +20,18 @@ app.get('/', (req, res) =>{
 		if (!err) 
 		{
 			console.log('file or directory exits');
+			fs.writeFile('stuff/' + d.getTime().toString(), count++, (err) =>
+			{
+				if (err) throw err;
+				console.log('Saved');
+			})
 		}
 		else
 		{
 			console.log('file/directory does not exist');
 			fs.mkdir('stuff', function()
 			{
-				
+
 			});
 			console.log('directory stuff has been made')
 		}
