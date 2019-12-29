@@ -12,10 +12,16 @@ app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/', (req, res) =>{
+app.get('/server101', (req, res) => {
+	res.send({ mesasge: `Hello World`})
+})
 
-	let act = new activity('sleeping', 45);
+app.post('/', (req, res) =>{
 
+	//let act = new activity('sleeping', 45);
+	console.log(req.body);
+	console.log(req.body);
+/*
 	fs.stat(act.date_created(), (err, stats) => 
 	{
 		//check if current foloder exists, if true, write file containing data
@@ -43,9 +49,9 @@ app.get('/', (req, res) =>{
 			});
 			console.log('directory stuff has been made');
 		}
-	})
+	})*/
 	res.send({
-		message: act.print_Info() +" " + act.get_Id()
+		message: `Hello World`
 	})
 })
 
