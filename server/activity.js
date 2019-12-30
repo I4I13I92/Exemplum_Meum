@@ -24,6 +24,11 @@ module.exports = class activity{
 		this.type = event_type;
 	}
 
+	set_duration(duration)
+	{
+		this.duration = duration;
+	}
+
 	//print info on specific event
 	print_Info(activity) 
 	{	
