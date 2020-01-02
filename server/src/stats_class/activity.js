@@ -1,6 +1,8 @@
 // Activity class
 module.exports = class activity{
 
+	static count = 0; 
+	
 	//class constructor, mostly defined by Date object upon instantiating time
 	//gets type from user/front-end
 	constructor(type, duration){
@@ -15,8 +17,6 @@ module.exports = class activity{
 		this.date = this.today_date.getDate();
 		this.year = this.today_date.getFullYear();
 	}
-
-	static count = 0;
 
 	//set the event type based on the user's input
 	set_type(event_type)
