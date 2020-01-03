@@ -2,6 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
+const readDir = util.promisify(fs.readdir);
+const readfile = util.promisify(fs.readFile);
 // Activity class
 
 /*module.exports = class dailyStats{
@@ -34,13 +36,45 @@ const util = require('util');
 	}
 }*/
 
-const readFile = util.promisify(fs.readFile);
+/*const readFile = util.promisify(fs.readFile);
 readFile("C:/Users/Victor/VueJs/exemplum_meum/Exemplum_Meum/server/12-30-2019/5")
 	.then(file => console.log(JSON.parse(file)))
 	.catch(err => 
 	{
 		console.log(err);
 	});
+*/
+//const promisify = require('util').promisify;
+//const readDir = promisify(fs.readdir);
+//const readfile = promisify(fs.readFile);
+
+const my_path = "C:/Users/Victor/VueJs/exemplum_meum/Exemplum_Meum/server";
+const date = "12-30-2019";
+
+async function getFiles()
+{
+	let activities = [];
+
+	const directoryPath = path.join(my_path, date);
+	let directoryFiles = await readDir(directoryPath);
+
+	for(let f of directoryFiles)
+	{
+		let filePath = path.join(directoryPath, f);
+		let fileData = await readfile(filePath);
+		let parsed_json = JSON.parse(fileData);
+		activities.push(parsed_json);
+	} 
+
+	return activities; 
+}
+
+getFiles()
+.then(res => console.log(res));
+//.then(success => console.log(success[0]))
+//.catch(err => console.log(err.message, err.stack));
+
+
 
 //read data from server
 /*
