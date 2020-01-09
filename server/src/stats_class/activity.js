@@ -1,7 +1,7 @@
 // Activity class
 module.exports = class activity{
 
-	static count = 0; 
+	static count = 0;
 	
 	//class constructor, mostly defined by Date object upon instantiating time
 	//gets type from user/front-end
@@ -30,9 +30,9 @@ module.exports = class activity{
 	}
 
 	//print info on specific event
-	print_Info(activity) 
+	print_Info() 
 	{	
-		return `You spent ${this.duration} minute(s) ${this.type} on ${this.month}-${this.date}-${this.year}.`;
+		console.log(`You spent ${this.duration} minute(s) ${this.type} on ${this.month}-${this.date}-${this.year}.`);
 	}
 
 	//return the date of the event based on when the object is created in mm/dd/yyyy format

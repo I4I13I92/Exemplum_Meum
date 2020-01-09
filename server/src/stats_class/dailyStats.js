@@ -1,78 +1,58 @@
-//const activity = require('./activity.js'); 
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
+
+
 const readDir = util.promisify(fs.readdir);
 const readfile = util.promisify(fs.readFile);
-// Activity class
 
-/*module.exports = class dailyStats{
+const activity = require('./activity.js');
+const stats= require('./stats_calculator.js');
+const day = require('./imports.js'); 
 
-	static daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-	//date in mm//dd/yyyy format, day in int, ex. 0 == Sun
-	constructor(date, day)
-	{
-		this.dailyActivities = [];//keep trak of all read activities
-		this.date = date; // get the date
-		this.day = daysOfWeek[day]; // day of the week
-		this.stats = new Map();
-	}
-
-
-	get_Activities()
-	{
-
-	}
-
-	Log_Daily_Stats()
-	{
-
-	}
-
-	Print_Daily_Info()
-	{
-
-	}
-}*/
-
-/*const readFile = util.promisify(fs.readFile);
-readFile("C:/Users/Victor/VueJs/exemplum_meum/Exemplum_Meum/server/12-30-2019/5")
-	.then(file => console.log(JSON.parse(file)))
-	.catch(err => 
-	{
-		console.log(err);
-	});
-*/
-//const promisify = require('util').promisify;
-//const readDir = promisify(fs.readdir);
-//const readfile = promisify(fs.readFile);
-
+//PATH NEEDS TO BE IMPORTED!!!!!!
+//Date is just for testing purposes
 const my_path = "C:/Users/Victor/VueJs/exemplum_meum/Exemplum_Meum/server";
 const date = "12-30-2019";
+// Activity class
 
-async function getFiles()
-{
-	let activities = [];
+module.exports = class dailyStats{
 
-	const directoryPath = path.join(my_path, date);
-	let directoryFiles = await readDir(directoryPath);
-
-	for(let f of directoryFiles)
+	//date in mm//dd/yyyy format, day in int, ex. 0 == Sun
+	constructor(date, day_number)
 	{
-		let filePath = path.join(directoryPath, f);
-		let fileData = await readfile(filePath);
-		let parsed_json = JSON.parse(fileData);
-		activities.push(parsed_json);
-	} 
+		this.daily_Activities = [];//keep trak of all read activities
+		this.date = date; // get the date
+		this.day = day.weekDay(day_number); // day of the week
+		this.stats = new Map();
+		Object.assign(this, stats.update_stats(this));//merge instantiation with with stats_calculator.js
+	}
 
-	return activities; 
+	//Returns an array with a date's list of activities
+	//returns a promise, must catch with .then/.catch
+	//when called to handle promise
+	async get_Activities(date)
+	{
+
+		const directoryPath = path.join(my_path, date);
+		let directoryFiles = await readDir(directoryPath);
+
+		for(let f of directoryFiles)
+		{
+			let filePath = path.join(directoryPath, f);
+			let fileData = await readfile(filePath);
+			let parsed_json = await JSON.parse(fileData);
+			this.daily_Activities.push(parsed_json);
+		}
+
+		return this.daily_Activities;
+	}
+
+
+
+	//return Object.assign(stats_Generator.up_stats(dailyStats)); 
 }
 
-getFiles()
-.then(res => console.log(res));
-//.then(success => console.log(success[0]))
-//.catch(err => console.log(err.message, err.stack));
 
 
 
@@ -121,37 +101,6 @@ fs.readdir(directoryPath, (err, files) => {
 
 
 //update stats tester
-/*let items  = new Map();
-
-
-items.set('car', 4);
-items.set('house', 6);
-items.set('pet', 3);
-items.set('property', 9);
-items.set('debt', 0);
-items.set('life', 1);
-
-let min_to_add = 5;
-
-//update value(minutes) asoociated with given key(activity) if contained
-//if not insert new key with value
-if(items.has('mansion'))
-{
-	x += items.get('car');
-	items.set('car', x);
-	console.log(items.get('car'));
-}
-else
-{
-	console.log('Does not currently have mansion(s)');
-	items.set('mansion', 2);
-	console.log(items.get('mansion'));
-}*/
-
-
-
-
-
 
 //write object to file server/create directory
 /*fs.stat(curr_act.date_created(), (err, stats) => 
