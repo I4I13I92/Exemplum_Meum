@@ -5,7 +5,6 @@ const morgan = require('morgan');
 const fs  = require('fs');
 const activity  = require('../stats_class/activity');
 
-
 const app = express();
 
 app.use(morgan('combined'));

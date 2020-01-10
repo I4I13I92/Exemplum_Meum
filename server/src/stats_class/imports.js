@@ -1,3 +1,4 @@
+//function for returning a day
 function day_of_week(day_number)
 {
 	switch(day_number)
@@ -19,4 +20,10 @@ function day_of_week(day_number)
 	}
 }
 
+//function that returns the path to directory containing date folders
+function path(){
+	return "C:/Users/Victor/VueJs/exemplum_meum/Exemplum_Meum/server";
+}
+
 module.exports.weekDay = day_of_week;
+module.exports.my_path = path;

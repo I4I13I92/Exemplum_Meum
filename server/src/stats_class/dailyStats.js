@@ -8,12 +8,10 @@ const readfile = util.promisify(fs.readFile);
 
 const activity = require('./activity.js');
 const stats= require('./stats_calculator.js');
-const day = require('./imports.js'); 
+const imports = require('./imports.js');//need to name better, imports isnt that great of a name 
 
 //PATH NEEDS TO BE IMPORTED!!!!!!
-//Date is just for testing purposes
-const my_path = "C:/Users/Victor/VueJs/exemplum_meum/Exemplum_Meum/server";
-const date = "12-30-2019";
+//Date is just for testing purposes;
 // Activity class
 
 module.exports = class dailyStats{
@@ -21,9 +19,10 @@ module.exports = class dailyStats{
 	//date in mm//dd/yyyy format, day in int, ex. 0 == Sun
 	constructor(date, day_number)
 	{
+		this.min_in_day = 1440;
 		this.daily_Activities = [];//keep trak of all read activities
 		this.date = date; // get the date
-		this.day = day.weekDay(day_number); // day of the week
+		this.day = imports.weekDay(day_number); // day of the week
 		this.stats = new Map();
 		Object.assign(this, stats.update_stats(this));//merge instantiation with with stats_calculator.js
 	}
@@ -31,10 +30,10 @@ module.exports = class dailyStats{
 	//Returns an array with a date's list of activities
 	//returns a promise, must catch with .then/.catch
 	//when called to handle promise
-	async get_Activities(date)
+	async get_Activities()
 	{
 
-		const directoryPath = path.join(my_path, date);
+		const directoryPath = path.join(imports.my_path(), this.date);
 		let directoryFiles = await readDir(directoryPath);
 
 		for(let f of directoryFiles)
