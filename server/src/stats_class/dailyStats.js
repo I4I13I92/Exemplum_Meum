@@ -7,24 +7,22 @@ const readDir = util.promisify(fs.readdir);
 const readfile = util.promisify(fs.readFile);
 
 const activity = require('./activity.js');
-const stats= require('./stats_calculator.js');
+const stats = require('./stats_calculator.js');
 const imports = require('./imports.js');//need to name better, imports isnt that great of a name 
 
-//PATH NEEDS TO BE IMPORTED!!!!!!
-//Date is just for testing purposes;
 // Activity class
-
 module.exports = class dailyStats{
 
 	//date in mm//dd/yyyy format, day in int, ex. 0 == Sun
 	constructor(date, day_number)
 	{
-		this.min_in_day = 1440;
-		this.daily_Activities = [];//keep trak of all read activities
+		this.minutes = 1440; //minutes in day, for calculation purposes
+		this.Activities = [];//keep trak of all read activity objects
 		this.date = date; // get the date
 		this.day = imports.weekDay(day_number); // day of the week
-		this.stats = new Map();
-		Object.assign(this, stats.update_stats(this));//merge instantiation with with stats_calculator.js
+		this.activity_minutes = new Map();//keep track of minutes for logged events by activty type
+		this.activity_stats = []//keep track of percantages for activities of a day
+		Object.assign(this, stats.get_Stats(this));//merge instantiation with stats_calculator.js
 	}
 
 	//Returns an array with a date's list of activities
@@ -41,63 +39,45 @@ module.exports = class dailyStats{
 			let filePath = path.join(directoryPath, f);
 			let fileData = await readfile(filePath);
 			let parsed_json = await JSON.parse(fileData);
-			this.daily_Activities.push(parsed_json);
+			this.Activities.push(parsed_json);
 		}
-
-		return this.daily_Activities;
 	}
 
-
-
-	//return Object.assign(stats_Generator.up_stats(dailyStats)); 
-}
-
-
-
-
-//read data from server
-/*
-const my_path = "C:/Users/Victor/VueJs/exemplum_meum/Exemplum_Meum/server";
-let date = "12-30-2019";
-
-const directoryPath = path.join(my_path,date);
-
-
-fs.readdir(directoryPath, (err, files) => {
-
-	console.log(directoryPath)
-	
-	if(err)
+	async set_activity_minutes()
 	{
-		return console.log("Unable to read directory");
-	}
+		//get the Activities from the specific date provided in the constructor
+		await this.get_Activities();
 
-	files.forEach((file) => {
-
-		if(err)
+		//return if no activties logged	
+		if (this.Activities.length == 0)
 		{
-			return console.log("no activities for the day: " + err)
+			console.log('No activities.');
+			return null;
 		}
-
 		else
 		{
-			let filePath = path.join(directoryPath, file);
-			fs.readFile(filePath, (err2, fileData) => {
-
-				if(err2)
-				{
-					console.log(err2);
-				}
-
-				else
-				{
-					console.log(JSON.parse(fileData));
-				}
-			})
+			console.log("Adding up the minutes by activity.");
 		}
-	})
-})*/
-
+		
+		for(let i = 0; i < this.Activities.length; i++)
+		{
+			//check to see if the current activity has already been logged into the map
+			if(this.activity_minutes.has(this.Activities[i].type))
+			{
+				//take the current amount of time for a specific activity and add the new but same type activitie's minutes
+				//to the current amount
+				console.log("Increased a logged activities' minutes");
+				let activity_total_time = this.activity_minutes.get(this.Activities[i].type) + this.Activities[i].duration;
+				this.activity_minutes.set(this.Activities[i].type, activity_total_time);
+			}
+			else
+			{
+				console.log("Logged a new activities' minutes");
+				this.activity_minutes.set(this.Activities[i].type, this.Activities[i].duration);
+			}
+		}
+	}
+}
 
 //update stats tester
 

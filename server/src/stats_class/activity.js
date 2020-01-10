@@ -1,4 +1,5 @@
 // Activity class
+//need to write logging function for activity!!!!!
 module.exports = class activity{
 
 	static count = 0;

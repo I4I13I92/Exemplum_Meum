@@ -1,17 +1,24 @@
-const stats_up = (state) => ({
-	update_activities(type, duration){
-		if(state.stats.has(type))
+const get_stats = (state) => ({
+	det_stats(){
+		
+		//check to make sure there logged activities for the date of daily stat object
+		if(state.Activities.length == 0)
 		{
-			console.log('It has the type');
-			let activity_total = state.stats.get(type) + duration;
-			state.stats.set(type, activity_total);
+			console.log("no activities");
+			return; 
 		}
-		else
+
+
+		for(let [k, v] of state.activity_minutes.entries())
 		{
-			console.log('it does not');
-			state.stats.set(type, duration);
-		}
+			//determine/round  the stat up too the hundredths place
+			let percent = (Math.round(v/state.minutes * 10000) / 100);
+			//console.log('activty:' + k + ' Total time spent in min:' + v + ' Pecentage of daily time spent:' + percent + '%');
+			let activty_stat = {activty: k, duration: v, pecentage: percent};
+			state.activity_stats.push(activty_stat);
+		} 
+		
 	}
 })
 
-module.exports.update_stats = stats_up;
+module.exports.get_Stats = get_stats;
