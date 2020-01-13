@@ -46,17 +46,12 @@ module.exports = class dailyStats{
 	async set_activity_minutes()
 	{
 		//get the Activities from the specific date provided in the constructor
-		await this.get_Activities();
+		//await this.get_Activities();
 
 		//return if no activties logged	
 		if (this.Activities.length == 0)
 		{
-			console.log('No activities.');
 			return null;
-		}
-		else
-		{
-			console.log("Adding up the minutes by activity.");
 		}
 		
 		for(let i = 0; i < this.Activities.length; i++)
@@ -66,17 +61,30 @@ module.exports = class dailyStats{
 			{
 				//take the current amount of time for a specific activity and add the new but same type activitie's minutes
 				//to the current amount
-				console.log("Increased a logged activities' minutes");
 				let activity_total_time = this.activity_minutes.get(this.Activities[i].type) + this.Activities[i].duration;
 				this.activity_minutes.set(this.Activities[i].type, activity_total_time);
 			}
 			else
 			{
-				console.log("Logged a new activities' minutes");
 				this.activity_minutes.set(this.Activities[i].type, this.Activities[i].duration);
 			}
 		}
 	}
+
+	async set_stats()
+	{
+		await this.get_Activities();
+		await this.set_activity_minutes();
+		this.det_stats();
+		console.log(this);
+	}
+
+
+
+	/*async set_activty_stats()
+	{
+		this.det_stats();
+	}*/
 }
 
 //update stats tester

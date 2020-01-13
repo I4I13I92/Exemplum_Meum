@@ -14,13 +14,14 @@ daily_stats_one.get_Activities()
 .catch(err => console.log(err));*/
 
 let daily_stats_one = new daily_Stats('12-30-2019', 2);
-daily_stats_one.set_activity_minutes()
+/*daily_stats_one.set_activity_minutes()
 .then(() => {
 	daily_stats_one.det_stats();
 })
-.catch(err => console.log(err));
+.catch(err => console.log(err));*/
+
 //console.log(daily_stats_one.activity_minutes);
-//daily_stats_one.det_stats();
+daily_stats_one.set_stats();
 
 /*daily_stats_one.update_activities('sleeping', 570);
 
