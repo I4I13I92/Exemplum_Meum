@@ -1,3 +1,6 @@
+//Need to fix!!
+//handle unresolved promises
+//concantination int conversion after reading from file server
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
@@ -76,7 +79,6 @@ module.exports = class dailyStats{
 		await this.get_Activities();
 		await this.set_activity_minutes();
 		this.det_stats();
-		console.log(this);
 	}
 
 
