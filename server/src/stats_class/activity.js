@@ -11,7 +11,7 @@ const imports = require('./imports.js');
 // Activity class
 module.exports = class activity{
 
-	static count = 0;
+	static count = 1;
 	
 	//class constructor, mostly defined by Date object upon instantiating time
 	//gets type from user/front-end
@@ -34,6 +34,7 @@ module.exports = class activity{
 		this.type = event_type;
 	}
 
+	//set duration of activity logged in by user
 	set_duration(duration)
 	{
 		this.duration = duration;
@@ -57,6 +58,11 @@ module.exports = class activity{
 		return `${this.id}`;
 	}
 
+	get_day()
+	{
+		return `${this.day}`;
+	}
+
 	async write_Activity()
 	{
 		//create the path where daily activities will be stored
@@ -65,37 +71,6 @@ module.exports = class activity{
 		console.log(path_to_folder + '\\' + this.id);
 
 		await fs.writeFile(path_to_folder + '\\' + this.id, JSON.stringify(this));
-		//check to see if the folder exists, ex. my_path + date
-		/*let dir_created = await fs.access(path_to_folder);
-		
-		if(dir_created)
-		{
-			console.log("created already");
-
-			try
-			{
-				await fs.writeFile(path_to_folder, JSON.stringify(this));
-			} catch(err){console.log(err)}
-		}
-		else
-		{
-			console.log("not created");
-			try
-			{
-				await fs.mkdir(path_to_folder);
-			} catch(err){console.log(err)}
-
-			/*try
-			{
-				await fs.writeFile(path_to_folder + '\\', JSON.stringify(this));
-			} catch(err){console.error(err)}
-
-			console.log("created folder and logged activity too!");
-		}*/
-		/*console.log(dir_exists);
-		console.log('Before write function');
-		await writeFile(server_path() + , JSON.stringify(this));
-		console.log('After write function');*/
 	}
 
 	async create_directory(a_path)
@@ -110,7 +85,7 @@ module.exports = class activity{
 			//returns false if the directory is already created
 			if(err.code === 'EEXIST')
 			{
-				console.error(err);
+				return;
 			}
 		}
 	}

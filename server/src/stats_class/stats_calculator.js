@@ -14,7 +14,7 @@ const get_stats = (state) => ({
 			//determine/round  the stat up too the hundredths place
 			let percent = (Math.round(v/state.minutes * 10000) / 100);
 			//console.log('activty:' + k + ' Total time spent in min:' + v + ' Pecentage of daily time spent:' + percent + '%');
-			let activty_stat = {activty: k, duration: v, pecentage: percent};
+			let activty_stat = {activty: k, duration: v, percentage: percent};
 			state.activity_stats.push(activty_stat);
 		} 
 		
