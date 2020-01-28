@@ -4,7 +4,7 @@ const daily_Stats = require('./dailyStats.js');
 const imports = require('./imports.js');
 
 
-let activity_one = new activity('sleeping', 60);
+let activity_one = new activity('sleeping', 20);
 let activity_two = new activity('programming', 45);
 let activity_three = new activity('running', 45);
 let activity_four = new activity('cleaning', 45);
@@ -19,6 +19,7 @@ activity_four.write_Activity();
 day_one_stats.set_stats()
 .then( () => {
 	console.log(day_one_stats);
+	day_one_stats.read_daily_stats('1-27-2020');
 })
 .catch(err => {
 	console.log(err);

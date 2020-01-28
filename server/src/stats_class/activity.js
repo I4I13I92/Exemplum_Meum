@@ -71,23 +71,36 @@ module.exports = class activity{
 		console.log(path_to_folder + '\\' + this.id);
 
 		await fs.writeFile(path_to_folder + '\\' + this.id, JSON.stringify(this));
+
+		//log first activity of day to keep track of all daily minutes as its own seperate file
+		if (this.id === 1) 
+		{
+			let stats_setter = {}
+			stats_setter[this.type] = this.duration;
+			await fs.writeFile(path_to_folder + '\\' + 'activity_sums', JSON.stringify(stats_setter));
+		}
 	}
 
 	async create_directory(a_path)
 	{
-		//make the directory
+		//create the directory
 		try
 		{
 			await fs.mkdir(a_path);
 		}
 		catch(err)
 		{
-			//returns false if the directory is already created
+			//returns if the directory is already created
 			if(err.code === 'EEXIST')
 			{
 				return;
 			}
 		}
+	}
+
+	async (a_path)
+	{
+
 	}
 }
 

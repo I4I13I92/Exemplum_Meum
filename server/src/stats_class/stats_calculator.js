@@ -1,3 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
+
+const readfile = util.promisify(fs.readFile);
+
+const imports = require('./imports.js');
+
+
 const get_stats = (state) => ({
 	det_stats(){
 		
@@ -21,4 +30,22 @@ const get_stats = (state) => ({
 	}
 })
 
+const get_daily_stats = (state) => ({
+	async read_daily_stats(a_date)//in mm/dd/yyyy format
+	{
+		const file_name = 'activity_sums';
+		const stats_obj_file = path.join(imports.my_path(), file_name, a_date)
+		let daily_stats = new Map();
+		console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+		console.log(stats_obj_file);
+		console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+		//daily_stats = await readfile()
+		//const directoryPath = path.join(imports.my_path(), this.date);
+ 
+	}
+})
+
+
 module.exports.get_Stats = get_stats;
+module.exports.get_obj = get_daily_stats;

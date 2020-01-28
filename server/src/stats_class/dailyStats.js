@@ -16,7 +16,7 @@ const imports = require('./imports.js');//need to name better, imports isnt that
 // Activity class
 module.exports = class dailyStats{
 
-	//date in mm//dd/yyyy format, day in int, ex. 0 == Sun
+	//date in mm//dd/yyyy format, day in int, ex. 0 == Sun, 1 == Mon, etc..
 	constructor(date, day_number)
 	{
 		this.minutes = 1440; //minutes in day, for calculation purposes
@@ -25,7 +25,7 @@ module.exports = class dailyStats{
 		this.day = imports.weekDay(day_number); // day of the week
 		this.activity_minutes = new Map();//keep track of minutes for logged events by activty type
 		this.activity_stats = []//keep track of percantages for activities of a day
-		Object.assign(this, stats.get_Stats(this));//merge instantiation with stats_calculator.js
+		Object.assign(this, stats.get_Stats(this), stats.get_obj(this));//merge instantiation with stats_calculator.js
 	}
 
 	//Returns an array with a date's list of activities
@@ -37,9 +37,9 @@ module.exports = class dailyStats{
 		const directoryPath = path.join(imports.my_path(), this.date);
 		let directoryFiles = await readDir(directoryPath);
 
-		for(let f of directoryFiles)
+		for(let f = 0; f < directoryFiles.length - 1; f++)
 		{
-			let filePath = path.join(directoryPath, f);
+			let filePath = path.join(directoryPath, directoryFiles[f]);
 			let fileData = await readfile(filePath);
 			let parsed_json = await JSON.parse(fileData);
 			this.Activities.push(parsed_json);
@@ -64,7 +64,7 @@ module.exports = class dailyStats{
 			{
 				//take the current amount of time for a specific activity and add the new but same type activitie's minutes
 				//to the current amount
-				let activity_total_time = this.activity_minutes.get(this.Activities[i].type) + this.Activities[i].duration;
+				let activity_total_time = this.activity_minutes.get(this.Activities[i].type) + this.Activities[i].duration;//need to convert this into an int, getting string
 				this.activity_minutes.set(this.Activities[i].type, activity_total_time);
 			}
 			else
