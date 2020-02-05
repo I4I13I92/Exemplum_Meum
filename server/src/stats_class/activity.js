@@ -17,7 +17,6 @@ module.exports = class activity{
 	//gets type from user/front-end
 	constructor(type, duration){
 
-
 		this.id = activity.count++;
 		this.type = type;
 		this.duration = duration;
@@ -66,22 +65,22 @@ module.exports = class activity{
 	async write_Activity()
 	{
 		//create the path where daily activities will be stored
-		let path_to_folder = path.join(imports.my_path() + "\\"+ this.date_created());
-		await this.create_directory(path_to_folder);
-		console.log(path_to_folder + '\\' + this.id);
+		let path_to_day_folder = path.join(await this.create_directory() + "\\"+ this.date_created());
+		console.log(path_to_day_folder);
+		await this.create_file(path_to_day_folder);
 
-		await fs.writeFile(path_to_folder + '\\' + this.id, JSON.stringify(this));
+		await fs.writeFile(path_to_day_folder + '\\' + this.id, JSON.stringify(this));
 
 		//log first activity of day to keep track of all daily minutes as its own seperate file
 		if (this.id === 1) 
 		{
 			let stats_setter = {}
 			stats_setter[this.type] = this.duration;
-			await fs.writeFile(path_to_folder + '\\' + 'activity_sums', JSON.stringify(stats_setter));
+			await fs.writeFile(path_to_day_folder + '\\' + 'activity_sums', JSON.stringify(stats_setter));
 		}
 	}
 
-	async create_directory(a_path)
+	async create_file(a_path)
 	{
 		//create the directory
 		try
@@ -93,13 +92,29 @@ module.exports = class activity{
 			//returns if the directory is already created
 			if(err.code === 'EEXIST')
 			{
-				return;
+				null;
 			}
 		}
 	}
 
-	async (a_path)
+	async create_directory()
 	{
+		let path_of_folder = path.join(imports.my_path() + "\\" + imports.months(this.month));
+		console.log(path_of_folder);
+
+		try
+		{
+			await fs.mkdir(path_of_folder);
+		}
+		catch(err)
+		{
+			if(err.code === 'EEXIST')
+			{
+				null;
+			}
+		}
+
+		return path_of_folder;
 
 	}
 }

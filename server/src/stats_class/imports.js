@@ -20,6 +20,14 @@ function day_of_week(day_number)
 	}
 }
 
+function month(month_number)
+{
+	const month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	
+	return month[month_number - 1];
+
+}
+
 function days_in_month(month_number)
 {
 	let longer_months = [1,3,5,7,8,10,12];
@@ -49,3 +57,5 @@ function path(){
 
 module.exports.weekDay = day_of_week;
 module.exports.my_path = path;
+module.exports.day_number = days_in_month;
+module.exports.months = month;
