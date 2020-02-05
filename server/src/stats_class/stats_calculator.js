@@ -34,7 +34,7 @@ const get_stats = (state) => ({
 const get_daily_stats = (state) => ({
 	async read_daily_stats(date)//in mm/dd/yyyy format
 	{
-		//set teh path to read from direcotries/files
+		//set the path to read from direcotries/files
 		const file_name = 'activity_sums';
 		const stats_obj_file = path.join(imports.my_path(), date, file_name);
 		//read file and parse json into map
@@ -45,14 +45,18 @@ const get_daily_stats = (state) => ({
 })
 
 const update_daily_stats = (state) => ({
-	async update_day_stats(date)//date in mm/dd/yyyy format
+	async update_day_stats(path_to_month, date)//date in mm/dd/yyyy format
 	{
-		const file_name = 'acitivty_sums';
-		const activities_path = path.join(imports.my_path(), date, file_name);
+		const file_name = 'activity_sums';
+		const activities_path = path.join(path_to_month, file_name);
+		//console.log(activities_path);
 
 		//read from file, parse json, and convert into a map
-		let day_stats = JSON.parse(await readfile(activities_path));
-		let update_day_stats_map = new Map(object.entries(day_stats));
+		//let unparsed_data = await readfile(activities_path);
+		//console.log(unparsed_data);
+		//let day_stats = JSON.parse(unparsed_data);
+		//let day_stats = JSON.parse(await readfile(activities_path));
+		/*let update_day_stats_map = new Map(Object.entries(day_stats));
 
 		//update the new activity to include into new data
 		if(update_day_stats_map.has(state.type)) 
@@ -67,9 +71,10 @@ const update_daily_stats = (state) => ({
 		}
 
 		//write updated stats to file server
-		await fs.writeFile(path.join(imports.my_path(), date) + '\\' + file_name, JSON.stringify(update_day_stats_map));
+		await fs.writeFile(activities_path, JSON.stringify(update_day_stats_map));*/
 	}
 })
 
 module.exports.get_Stats = get_stats;
 module.exports.get_obj = get_daily_stats;
+module.exports.up_Day_Stats = update_daily_stats;

@@ -2,11 +2,13 @@ const fs = require('fs').promises;
 const util = require('util');
 const path = require('path');
 
+
 //const writeFile = util.promisify(fs.writeFile);
 //const mkdir = util.promisify(fs.mkdir);
 //const exists = util.promisify(fs.exists);
 
 const imports = require('./imports.js');
+const stats = require('./stats_calculator.js');
 
 // Activity class
 module.exports = class activity{
@@ -25,6 +27,7 @@ module.exports = class activity{
 		this.day = this.today_date.getDay();
 		this.date = this.today_date.getDate();
 		this.year = this.today_date.getFullYear();
+		Object.assign(this, stats.up_Day_Stats(this));
 	}
 
 	//set the event type based on the user's input
@@ -66,17 +69,24 @@ module.exports = class activity{
 	{
 		//create the path where daily activities will be stored
 		let path_to_day_folder = path.join(await this.create_directory() + "\\"+ this.date_created());
-		console.log(path_to_day_folder);
+		//console.log(path_to_day_folder);
 		await this.create_file(path_to_day_folder);
 
 		await fs.writeFile(path_to_day_folder + '\\' + this.id, JSON.stringify(this));
 
+		//update daily stats
+		if (this.id != 1) 
+		{
+			await this.update_day_stats(path_to_day_folder, this.date_created());
+			console.log("Updated activity stats:" + " " + this.type);
+		}
 		//log first activity of day to keep track of all daily minutes as its own seperate file
-		if (this.id === 1) 
+		else
 		{
 			let stats_setter = {}
 			stats_setter[this.type] = this.duration;
 			await fs.writeFile(path_to_day_folder + '\\' + 'activity_sums', JSON.stringify(stats_setter));
+			console.log("Just logged the first activity of the day:" + " " + this.type);
 		}
 	}
 
