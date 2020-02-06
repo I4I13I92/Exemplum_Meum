@@ -61,12 +61,22 @@ const update_daily_stats = (state) => ({
 		let update_day_stats_map = new Map(Object.entries(day_stats));
 		console.log(update_day_stats_map);
 		console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		update_day_stats_map.set(state.type, state.duration);
-		console.log(update_day_stats_map);
+		//console.log(state.type + ": " + state.duration);
+		//update_day_stats_map.set(state.type, state.duration);
+		if (update_day_stats_map instanceof Map) 
+		{
+			console.log(JSON.stringify(update_day_stats_map));
+			console.log("??????????????????????????????");
+			console.log(update_day_stats_map);
+		}
 
+		console.log(update_day_stats_map instanceof Map);
+		//console.log(update_day_stats_map);
+		console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		//await fs.open(activities_path);
-		FS.writeFileSync(activities_path, JSON.stringify(update_day_stats_map));
-		console.log("completed file write");
+
+		//await fs.writeFile(activities_path, JSON.stringify(day_stats));
+		//console.log("completed file write: " + JSON.stringify(day_stats));
 		//update the new activity to include into new data
 		/*if(update_day_stats_map.has(state.type)) 
 		{

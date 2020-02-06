@@ -53,8 +53,6 @@ function path(){
 	return "C:/Users/Victor/VueJs/exemplum_meum/Exemplum_Meum/server";
 }
 
-
-
 module.exports.weekDay = day_of_week;
 module.exports.my_path = path;
 module.exports.day_number = days_in_month;
