@@ -4,12 +4,12 @@ const daily_Stats = require('./dailyStats.js');
 const imports = require('./imports.js');
 
 let my_map = new Map();
-let obj = {}
-obj.age = 23;
-obj.name = "Victor";
 my_map.set("sleeping", 30);
 my_map.set("running", 54);
-[...my_map];
+
+let obj = Object.fromEntries(my_map);
+
 console.log(JSON.stringify(obj));
+
 
 

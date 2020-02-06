@@ -54,47 +54,23 @@ const update_daily_stats = (state) => ({
 
 		//read from file, parse json, and convert into a map
 		let unparsed_data = await fs.readFile(activities_path);
-		console.log(unparsed_data);
-		let day_stats = JSON.parse(unparsed_data);
-		console.log(day_stats);
-		console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		let update_day_stats_map = new Map(Object.entries(day_stats));
-		console.log(update_day_stats_map);
-		console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		//console.log(state.type + ": " + state.duration);
-		//update_day_stats_map.set(state.type, state.duration);
-		if (update_day_stats_map instanceof Map) 
-		{
-			console.log(JSON.stringify(update_day_stats_map));
-			console.log("??????????????????????????????");
-			console.log(update_day_stats_map);
-		}
+		let update_day_stats_map = new Map(Object.entries(JSON.parse(unparsed_data)));
 
-		console.log(update_day_stats_map instanceof Map);
-		//console.log(update_day_stats_map);
-		console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		//await fs.open(activities_path);
-
-		//await fs.writeFile(activities_path, JSON.stringify(day_stats));
-		//console.log("completed file write: " + JSON.stringify(day_stats));
 		//update the new activity to include into new data
-		/*if(update_day_stats_map.has(state.type)) 
+		if(update_day_stats_map.has(state.type)) 
 		{
 			let update_activity_day_minutes = Number(update_day_stats_map.get(state.type));
 			update_activity_day_minutes += state.duration;
 			update_day_stats_map.set(state.type, update_activity_day_minutes); 
-			console.log(update_day_stats_map);
 		}
 		else
 		{
 			update_day_stats_map.set(state.type, state.duration);
-			console.log(update_day_stats_map);
 		}
-		*/
-		//write updated stats to file server
-		//update_day_stats_map.set(state.type, state.duration);
-		//console.log(update_day_stats_map + '!!!!!!!!!!!!!!!!!!!!');
-		//await fs.writeFile(activities_path, JSON.stringify(update_day_stats_map));
+		//convert to reg object since since JSON stringify doesn't work on maps(ES6)
+		// and write updated stats to file server
+		let map_to_object = Object.fromEntries(update_day_stats_map);
+		await fs.writeFile(activities_path, JSON.stringify(map_to_object));
 	}
 })
 
