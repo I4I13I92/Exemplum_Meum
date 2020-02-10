@@ -2,80 +2,57 @@ const fs = require('fs').promises;
 const util = require('util');
 const path = require('path');
 
-
-//const writeFile = util.promisify(fs.writeFile);
-//const mkdir = util.promisify(fs.mkdir);
-//const exists = util.promisify(fs.exists);
-
 const imports = require('./imports.js');
-const stats = require('./stats_calculator.js');
+const activty = require('./activity.js');
 
-// Activity class
-module.exports = class activity{
 
-	static count = 1;
-	
-	//class constructor, mostly defined by Date object upon instantiating time
-	//gets type from user/front-end
-	constructor(type, duration){
+module.exports = class activityLogger{
 
-		this.id = activity.count++;
-		this.type = type;
-		this.duration = duration;
-		this.today_date = new Date();
-		this.month = this.today_date.getMonth() + 1;
-		this.day = this.today_date.getDay();
-		this.date = this.today_date.getDate();
-		this.year = this.today_date.getFullYear();
-		Object.assign(this, stats.up_Day_Stats(this), stats.up_Mon_Stats(this));
-	}
-
-	//set the event type based on the user's input
-	set_type(event_type)
+	constructor(type, duration)
 	{
-		this.type = event_type;
+		this.activity = new activity(type, duration);
+		this.path_to_month = path.join(imports.my_path() + "\\" + imports.months(this.activity.get_month()));
+		this.path_to_date = path.join(path_to_month + "\\" + this.activity.date_created());
+		this.monthly_created = false;
+		this.daily_created = false; 
 	}
 
-	//set duration of activity logged in by user
-	set_duration(duration)
+	async Create_Month_Directory()
 	{
-		this.duration = duration;
+		try
+		{
+			await fs.mkdir(this.path_to_month);
+		}
+		catch(err)
+		{
+			if(err.code === 'EEXIST')
+			{
+				null;
+			}
+		}
+
+		this.monthly_created = true;
 	}
 
-	//print info on specific event
-	print_Info() 
-	{	
-		console.log(`You spent ${this.duration} minute(s) ${this.type} on ${this.month}-${this.date}-${this.year}.`);
-	}
-
-	//return the date of the event based on when the object is created in mm/dd/yyyy format
-	date_created()
+	async Update_Monthly_Stat()
 	{
-		return `${this.month}-${this.date}-${this.year}`;
+		if (this.monthly_created)
+		{
+			Create_Month_Directory();
+			fs.writeFile(this.path_to_month + "\\" + "Total_Sums", JSON.stringify(this.activity.get_activity_duration()))
+		}
+		else
+		{
+
+		}
 	}
 
-	//return id
-	get_Id()
+	async Create_Day_Directory()
 	{
-		return `${this.id}`;
+		
 	}
 
-	get_day()
-	{
-		return `${this.day}`;
-	}
-
-	get_Month()
-	{
-		return `${this.month}`;
-	}
-
-	get_activty_duration()
-	{
-		return {activity: `${this.type}`, duration: `${this.duration}`};
-	}
-
-	async write_Activity()
+	/*async write_Activity()
 	{
 		//where monthly stat file will be created
 		//await fs.writeFile(await this.create_monthly_directory() + "\\" + 'Total_Sums', JSON.stringify(''));
@@ -104,10 +81,10 @@ module.exports = class activity{
 		await this.update_day_stats(path_to_day_folder, this.date_created());
 		console.log("Updated activity stats:" + " " + this.type);
 	
-	}
+	}*/
 
 	//creates a directory for holding daily activities
-	async create_daily_directory(a_path)
+	/*async create_daily_directory(a_path)
 	{
 		//create the directory
 		try
@@ -122,10 +99,10 @@ module.exports = class activity{
 				null;
 			}
 		}
-	}
+	}*/
 
 	//creates a directory for the month containing the daily directories
-	async create_monthly_directory()
+	/*async create_monthly_directory()
 	{
 		let path_of_folder = path.join(imports.my_path() + "\\" + imports.months(this.month));
 		console.log(path_of_folder);
@@ -143,7 +120,6 @@ module.exports = class activity{
 		}
 
 		return false;
-	}
+	}*/
 }
-
 
