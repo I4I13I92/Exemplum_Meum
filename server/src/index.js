@@ -15,7 +15,11 @@ app.use(cors());
 app.get('/a/:act', (req, res) => {
 //for testing purposes
 	let minutes = [10, 20, 30, 40, 50, 60, 70];
-	let min = minutes[2];
+
+	let count = 0;
+	count = counter(count);
+
+	let min = minutes[count];
 
 
 	let curr_act = new activity(req.params.act, min)
@@ -32,3 +36,18 @@ app.post('/astroserver', (req, res) => {
 })
 
 app.listen(process.env.PORT || 8081);
+
+
+function counter(num)
+{
+	if(num === 6)
+	{
+		num = 0;
+		return num;
+	}
+	else
+	{
+		num++;
+		return num;
+	}
+}

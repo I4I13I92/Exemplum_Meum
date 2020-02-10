@@ -48,7 +48,7 @@ const get_daily_stats = (state) => ({
 const update_daily_stats = (state) => ({
 	async update_day_stats(path_to_month, date)//date in mm/dd/yyyy format
 	{
-		const file_name = 'activity_sums';
+		const file_name = 'Total_Sums';
 		const activities_path = path.join(path_to_month, file_name);
 		console.log(activities_path);
 
@@ -74,6 +74,38 @@ const update_daily_stats = (state) => ({
 	}
 })
 
+const update_monthly_stats = (state) => ({
+	async update_monthly_stats(path_to_dir)
+	{
+		const file_name = 'Total_Sums';
+		const monthly_activity_path = path.join(path_to_dir, file_name);
+
+		let unparsed_data = await fs.readFile(monthly_activity_path);
+		let update_month_stats = new Map(Object.entries(JSON.parse(unparsed_data)));
+
+		if(update_month_stats.has(state.type)) 
+		{
+			let updated_monthly_activity_minutes = Number(update_month_stats.get(state.type));
+			updated_monthly_activity_minutes += state.duration;
+			update_month_stats.set(state.type, updated_monthly_activity_minutes);
+		}
+		else
+		{
+			update_month_stats.set(state.type, state.duration);
+		}
+		//convert map to reg object in order to convert to JSON
+		let map_to_object = Object.fromEntries(update_month_stats);
+		await fs.writeFile(monthly_activity_path, JSON.stringify(map_to_object));
+	}
+})
+
+
+
+
+
+
+
 module.exports.get_Stats = get_stats;
 module.exports.get_obj = get_daily_stats;
 module.exports.up_Day_Stats = update_daily_stats;
+module.exports.up_Mon_Stats = update_monthly_stats;
