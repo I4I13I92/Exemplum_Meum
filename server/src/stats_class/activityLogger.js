@@ -13,8 +13,8 @@ module.exports = class activityLogger{
 		this.activity = new activity(type, duration);
 		this.path_to_month = path.join(imports.my_path() + "\\" + imports.months(this.activity.get_month()));
 		this.path_to_date = path.join(path_to_month + "\\" + this.activity.date_created());
-		this.monthly_created = false;
-		this.daily_created = false; 
+		this.monthly_file_created = Create_Month_Directory();
+		this.daily_file_created = Create_Day_Directory(); 
 	}
 
 	async Create_Month_Directory()
@@ -27,30 +27,57 @@ module.exports = class activityLogger{
 		{
 			if(err.code === 'EEXIST')
 			{
-				null;
+				this.monthly_file_created = true;
 			}
 		}
 
-		this.monthly_created = true;
+		this,monthly_file_created = false;
+
+
 	}
 
 	async Update_Monthly_Stat()
 	{
-		if (this.monthly_created)
+		if (this.monthly_file_created)
 		{
-			Create_Month_Directory();
-			fs.writeFile(this.path_to_month + "\\" + "Total_Sums", JSON.stringify(this.activity.get_activity_duration()))
 		}
 		else
 		{
-
+			//update monthly stats
+			fs.writeFile(this.path_to_month + "\\" + "Total_Sums", JSON.stringify(this.activity.get_activity_duration()));
 		}
 	}
 
 	async Create_Day_Directory()
 	{
-		
+		try
+		{
+			await fs.mkdir(this.path_to_date);
+		}
+		catch(err)
+		{
+			//returns if the directory is already created
+			if(err.code === 'EEXIST')
+			{
+				this.daily_file_created = true;
+			}
+		}
+
+		this.daily_file_created = false;
 	}
+
+	async Update_Daily_Stat()
+	{
+		if(this.daily_file_created)
+		{
+
+		}
+		else
+		{
+			fs.writeFile(this.path_to_date + "\\" + "Total_Sums", JSON.stringify(this.activity.get_activity_duration()));	
+		}
+	}
+	
 
 	/*async write_Activity()
 	{

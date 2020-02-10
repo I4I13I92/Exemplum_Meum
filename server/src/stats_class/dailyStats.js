@@ -80,13 +80,6 @@ module.exports = class dailyStats{
 		await this.set_activity_minutes();
 		this.det_stats();
 	}
-
-
-
-	/*async set_activty_stats()
-	{
-		this.det_stats();
-	}*/
 }
 
 //update stats tester
