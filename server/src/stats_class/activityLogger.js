@@ -40,11 +40,12 @@ module.exports = class activityLogger{
 	{
 		if (this.monthly_file_created)
 		{
+			update_logged_activities(this.path_to_month);
 		}
 		else
 		{
 			//update monthly stats
-			fs.writeFile(this.path_to_month + "\\" + "Total_Sums", JSON.stringify(this.activity.get_activity_duration()));
+			await fs.writeFile(this.path_to_month + "\\" + "Total_Sums", JSON.stringify(this.activity.get_activity_duration()));
 		}
 	}
 
@@ -70,83 +71,34 @@ module.exports = class activityLogger{
 	{
 		if(this.daily_file_created)
 		{
-
+			update_logged_activities(this.path_to_date);
 		}
 		else
 		{
-			fs.writeFile(this.path_to_date + "\\" + "Total_Sums", JSON.stringify(this.activity.get_activity_duration()));	
+			await fs.writeFile(this.path_to_date + "\\" + "Total_Sums", JSON.stringify(this.activity.get_activity_duration()));	
 		}
 	}
-	
 
-	/*async write_Activity()
+	async update_logged_activities(path_to_location)
 	{
-		//where monthly stat file will be created
-		//await fs.writeFile(await this.create_monthly_directory() + "\\" + 'Total_Sums', JSON.stringify(''));
-		//create the path where daily activities will be stored
+		let unparsed_data = await fs.readFile(path_to_location);
+		let parsed_daily_data = new Map(Object.entries(JSON.parse(unparsed_data)));
 
-		if(await this.create_monthly_directory() != false)
+		if(parsed_daily_data.has(this.activity.get_type()))
 		{
-			await this.update_monthly_stats(await this.create_monthly_directory());
+			//get the logged minutes of a specific daily event type
+			let daily_activity_minutes = Number(parsed_daily_data.get(this.activity.get_type()));
+			daily_activity_minutes += this.activity.get_duraiotn(); 
+			parsed_daily_data.set(this.activity.get_type(), daily_activity_minutes);
+		}
+		else
+		{
+			parsed_daily_data.set(this.activity.get_type(), this.activity.get_duraiotn());
 		}
 
-		let path_to_day_folder = path.join(await this.create_monthly_directory() + "\\"+ this.date_created());
+		let data_for_JSON = Object.fromEntries(parsed_daily_data);
+		await fs.writeFile(path_to_location, data_for_JSON);
 		
-		await this.create_daily_directory(path_to_day_folder);
-		await fs.writeFile(path_to_day_folder + '\\' + this.id, JSON.stringify(this));
-
-		//update daily stats
-		if (this.id === 1) 
-		{
-			let stats_setter = {}
-			stats_setter[this.type] = this.duration;
-			await fs.writeFile(path_to_day_folder + '\\' + 'Total_Sums', JSON.stringify(stats_setter));
-			console.log("Just logged the first activity of the day:" + " " + this.type);
-		}
-		//log first activity of day to keep track of all daily minutes as its own seperate file
-
-		await this.update_day_stats(path_to_day_folder, this.date_created());
-		console.log("Updated activity stats:" + " " + this.type);
-	
-	}*/
-
-	//creates a directory for holding daily activities
-	/*async create_daily_directory(a_path)
-	{
-		//create the directory
-		try
-		{
-			await fs.mkdir(a_path);
-		}
-		catch(err)
-		{
-			//returns if the directory is already created
-			if(err.code === 'EEXIST')
-			{
-				null;
-			}
-		}
-	}*/
-
-	//creates a directory for the month containing the daily directories
-	/*async create_monthly_directory()
-	{
-		let path_of_folder = path.join(imports.my_path() + "\\" + imports.months(this.month));
-		console.log(path_of_folder);
-
-		try
-		{
-			await fs.mkdir(path_of_folder);
-		}
-		catch(err)
-		{
-			if(err.code === 'EEXIST')
-			{
-				return path_of_folder;
-			}
-		}
-
-		return false;
-	}*/
+	}
 }
 
