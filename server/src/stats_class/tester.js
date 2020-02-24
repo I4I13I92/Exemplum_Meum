@@ -1,15 +1,13 @@
-const stats = require('./stats_calculator.js');
-const activity = require('./activity.js');
-const daily_Stats = require('./dailyStats.js');
+const fs = require('fs').promises;
+const util = require('util');
+const path = require('path');
+
 const imports = require('./imports.js');
-
-let my_map = new Map();
-my_map.set("sleeping", 30);
-my_map.set("running", 54);
-
-let obj = Object.fromEntries(my_map);
-
-console.log(JSON.stringify(obj));
+const stats = require('./stats_calculator.js');
+const DailyStats = require('./DailyStats.js');
+const Stats = require('./Stats.js');
 
 
-
+let day_stat = new DailyStats();
+//let stat = new Stats();
+console.log(day_stat.determine_minutes());

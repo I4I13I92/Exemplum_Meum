@@ -2,11 +2,6 @@ const fs = require('fs').promises;
 const util = require('util');
 const path = require('path');
 
-
-//const writeFile = util.promisify(fs.writeFile);
-//const mkdir = util.promisify(fs.mkdir);
-//const exists = util.promisify(fs.exists);
-
 const imports = require('./imports.js');
 const stats = require('./stats_calculator.js');
 
@@ -83,8 +78,4 @@ module.exports = class activity{
 	{
 		return {activity: `${this.type}`, duration: `${this.duration}`};
 	}
-
-
-	
-
-
+}

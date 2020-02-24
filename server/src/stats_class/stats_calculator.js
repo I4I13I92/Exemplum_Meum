@@ -1,5 +1,4 @@
 const fs = require('fs').promises;
-const FS = require('fs');//clean up
 const path = require('path');
 const util = require('util');
 
@@ -33,15 +32,8 @@ const get_stats = (state) => ({
 })
 
 const get_daily_stats = (state) => ({
-	async read_daily_stats(date)//in mm/dd/yyyy format
+	async read_daily_stats()
 	{
-		//set the path to read from direcotries/files
-		const file_name = 'activity_sums';
-		const stats_obj_file = path.join(imports.my_path(), date, file_name);
-		//read file and parse json into map
-		let daily_stats = JSON.parse(await fs.readFile(stats_obj_file));
-		state.activity_minutes = new Map(Object.entries(daily_stats));
-
 	}
 })
 
